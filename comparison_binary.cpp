@@ -14,9 +14,9 @@ Comparison_binary::Comparison_binary(const QDir& directory)
     }
 }
 
-QStringList Comparison_binary::get_equals(const Comparison_binary& second_dir)
+QStringList* Comparison_binary::get_equals(const Comparison_binary& second_dir)
 {
-    QStringList list_of_equals;
+    QStringList* list_of_equals = new QStringList();
     QMap<QString, QByteArray>::ConstIterator i = binary_list_of_files.constBegin();
     while(i != binary_list_of_files.constEnd())
     {
@@ -24,7 +24,7 @@ QStringList Comparison_binary::get_equals(const Comparison_binary& second_dir)
         while(j != second_dir.binary_list_of_files.constEnd())
         {
             if(i.value() == j.value())
-                list_of_equals.append("1 Directory/ " + i.key() + " == " + "2 Directory/ " + j.key());
+                list_of_equals->append("1 Directory/ " + i.key() + " == " + "2 Directory/ " + j.key());
             ++j;
         }
         ++i;

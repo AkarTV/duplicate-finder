@@ -40,14 +40,14 @@ void MainWindow::on_find_equal_button_clicked()
     {
         Comparison_binary first_dir(dir1);
         Comparison_binary second_dir(dir2);
-        QStringList list_of_equals = first_dir.get_equals(second_dir);
-        if(list_of_equals.isEmpty())
+        QStringList* list_of_equals = first_dir.get_equals(second_dir);
+        if(list_of_equals->isEmpty())
             ui->result_label->setText("No equal files");
         else
         {
             uint count = 0;
-            QStringList::ConstIterator i = list_of_equals.constBegin();
-            while(i != list_of_equals.constEnd())
+            QStringList::ConstIterator i = list_of_equals->constBegin();
+            while(i != list_of_equals->constEnd())
             {
                 ui->equal_list->addItem(*i);
                 ++i;
@@ -55,6 +55,7 @@ void MainWindow::on_find_equal_button_clicked()
             }
             ui->result_label->setText(QString::number(count) + " equal files");
         }
+        delete list_of_equals;
     }
 }
 
