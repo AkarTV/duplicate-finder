@@ -7,8 +7,8 @@
 class Comparison_binary
 {
 public:
-    Comparison_binary(QDir& directory);
-    QStringList get_equals(const Comparison_binary&);
+    Comparison_binary(const QDir& directory);
+    QStringList get_equals(const Comparison_binary& second_dir);
 private:
     QMap<QString, QByteArray> binary_list_of_files;
 };

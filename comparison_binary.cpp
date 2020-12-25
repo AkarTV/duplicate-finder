@@ -1,11 +1,10 @@
 #include "comparison_binary.h"
 #include "QMessageBox"
 
-Comparison_binary::Comparison_binary(QDir& directory)
+Comparison_binary::Comparison_binary(const QDir& directory)
 {
     QFileInfoList directory_file_list(directory.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries));
     QFileInfoList::ConstIterator i = directory_file_list.constBegin();
-    QFile file;
     while(i != directory_file_list.constEnd())
     {
         QFile file(i->absoluteFilePath());
