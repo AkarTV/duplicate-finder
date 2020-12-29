@@ -38,24 +38,21 @@ void MainWindow::on_find_equal_button_clicked()
         QMessageBox::critical(this, "Doesn't choosed directory!", "Please set both directories");
     else
     {
-        Comparison_binary first_dir(dir1);
-        Comparison_binary second_dir(dir2);
-        QStringList* list_of_equals = first_dir.get_equals(second_dir);
-        if(list_of_equals->isEmpty())
+        Comparison_binary binary_list(dir1, dir2);
+        QStringList list_of_equals = binary_list.get_equals();
+        if(list_of_equals.isEmpty())
             ui->result_label->setText("No equal files");
         else
         {
             uint count = 0;
-            QStringList::ConstIterator i = list_of_equals->constBegin();
-            while(i != list_of_equals->constEnd())
+            QStringList::ConstIterator i = list_of_equals.constBegin();
+            for( ; i != list_of_equals.constEnd(); ++i)
             {
-                ui->equal_list->addItem(*i);
-                ++i;
                 ++count;
+                ui->equal_list->addItem(QString::number(count) + ". " + *i);
             }
             ui->result_label->setText(QString::number(count) + " equal files");
         }
-        delete list_of_equals;
     }
 }
 

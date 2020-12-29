@@ -2,15 +2,16 @@
 #define COMPARISON_BINARY_H
 #include "QDir"
 #include "QByteArray"
-#include "QMap"
+#include "QMultiHash"
 
 class Comparison_binary
 {
 public:
-    Comparison_binary(const QDir& directory);
-    QStringList* get_equals(const Comparison_binary& second_dir);
+    Comparison_binary(const QDir& dir1, const QDir& dir2);
+    QStringList get_equals() const;
 private:
-    QMap<QString, QByteArray> binary_list_of_files;
+    QMultiHash<QByteArray, QString> binary_list_of_files;
+    void add_to_list(const QDir& directory);
 };
 
 #endif // COMPARISON_BINARY_H

@@ -1,33 +1,43 @@
 #include "comparison_binary.h"
 #include "QMessageBox"
+#include "QCryptographicHash"
+#include "QDirIterator"
 
-Comparison_binary::Comparison_binary(const QDir& directory)
+Comparison_binary::Comparison_binary(const QDir& dir1, const QDir& dir2)
 {
-    QFileInfoList directory_file_list(directory.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries));
-    QFileInfoList::ConstIterator i = directory_file_list.constBegin();
-    while(i != directory_file_list.constEnd())
+    add_to_list(dir1);
+    add_to_list(dir2);
+}
+
+void Comparison_binary::add_to_list(const QDir& directory)
+{
+    QDirIterator it(directory, QDirIterator::Subdirectories);
+    while(it.hasNext())
     {
-        QFile file(i->absoluteFilePath());
+        QCryptographicHash hash(QCryptographicHash::Md5);
+        QFile file(it.next());
         if(file.open(QIODevice::ReadOnly))
-            binary_list_of_files[i->fileName()] = QByteArray(file.readAll());
-        ++i;
+        {
+            hash.addData(file.readAll());
+            binary_list_of_files.insert(hash.result(), file.fileName());
+            hash.reset();
+        }
     }
 }
 
-QStringList* Comparison_binary::get_equals(const Comparison_binary& second_dir)
+QStringList Comparison_binary::get_equals() const
 {
-    QStringList* list_of_equals = new QStringList();
-    QMap<QString, QByteArray>::ConstIterator i = binary_list_of_files.constBegin();
-    while(i != binary_list_of_files.constEnd())
+    QStringList list_of_equals;
+    for(auto key_ : binary_list_of_files.uniqueKeys())
     {
-        QMap<QString, QByteArray>::ConstIterator j = second_dir.binary_list_of_files.constBegin();
-        while(j != second_dir.binary_list_of_files.constEnd())
+        if(binary_list_of_files.count(key_) > 1)
         {
-            if(i.value() == j.value())
-                list_of_equals->append("1 Directory/ " + i.key() + " == " + "2 Directory/ " + j.key());
-            ++j;
+            QString equal_files;
+            QMultiHash<QByteArray, QString>::ConstIterator i = binary_list_of_files.find(key_);
+            for( ; i != binary_list_of_files.end() && i.key() == key_; ++i)
+                equal_files.append(i.value() + " | ");
+            list_of_equals.append(equal_files);
         }
-        ++i;
     }
     return list_of_equals;
 }
