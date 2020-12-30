@@ -20,7 +20,6 @@ void Comparison_binary::add_to_list(const QDir& directory)
         {
             hash.addData(file.readAll());
             binary_list_of_files.insert(hash.result(), file.fileName());
-            hash.reset();
         }
     }
 }
