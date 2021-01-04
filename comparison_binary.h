@@ -1,7 +1,6 @@
 #ifndef COMPARISON_BINARY_H
 #define COMPARISON_BINARY_H
 #include "QDir"
-#include "QByteArray"
 #include "QMultiHash"
 
 class Comparison_binary
@@ -9,9 +8,12 @@ class Comparison_binary
 public:
     Comparison_binary(const QDir& dir1, const QDir& dir2);
     QStringList get_equals() const;
+    unsigned get_total_counter() const;
+    ~Comparison_binary();
 private:
-    QMultiHash<QByteArray, QString> binary_list_of_files;
+    QMultiHash<qint64, QString> list_of_files;
     void add_to_list(const QDir& directory);
+    static unsigned counter;
 };
 
 #endif // COMPARISON_BINARY_H

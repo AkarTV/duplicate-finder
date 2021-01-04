@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     if(qgetenv("USER").isEmpty())
         username = qgetenv("USERNAME"); //get OS username
+    ui->equal_list->setStyleSheet( "QListWidget::item { border-bottom: 1px solid black; } " );
 }
 
 MainWindow::~MainWindow()
@@ -32,26 +33,27 @@ void MainWindow::on_dir2_set_button_clicked()
     ui->dir2_path_label->setText(dir2_path);
 }
 
+#include "QDebug"
 void MainWindow::on_find_equal_button_clicked()
 {
     if(ui->dir1_path_label->text().isEmpty() || ui->dir2_path_label->text().isEmpty())
         QMessageBox::critical(this, "Doesn't choosed directory!", "Please set both directories");
     else
     {
+        unsigned start_time = clock();
         Comparison_binary binary_list(dir1, dir2);
         QStringList list_of_equals = binary_list.get_equals();
+        unsigned end_time = clock();
+        unsigned search_time = end_time - start_time;
+        qDebug()<<QString::number(search_time);
         if(list_of_equals.isEmpty())
             ui->result_label->setText("No equal files");
         else
         {
-            uint count = 0;
             QStringList::ConstIterator i = list_of_equals.constBegin();
             for( ; i != list_of_equals.constEnd(); ++i)
-            {
-                ++count;
-                ui->equal_list->addItem(QString::number(count) + ". " + *i);
-            }
-            ui->result_label->setText(QString::number(count) + " equal files");
+                ui->equal_list->addItem(*i);
+            ui->result_label->setText(QString::number(binary_list.get_total_counter()) + " files found");
         }
     }
 }
