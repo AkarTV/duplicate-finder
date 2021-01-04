@@ -1,0 +1,18 @@
+1 - Duplicate finder; 2 - Total Commander
+
+/GTA V: 728 files (88,8 GB)
+1) 111 | 110 sec
+2) 120 sec | 120 sec
+
+/Qt: 102660 files (2,22 GB)
+1) 36,2 sec | 22,9 sec | 24,3 sec | 22,7 sec
+2) 33 sec | 42,4 sec | 32 sec | 34 sec
+
+/Android: 27836 files (3,88 GB)
+1) 13 sec | 8 sec | 8 sec
+2) 11 sec | 18 sec | 15 sec
+
+/Microsoft Visual Studio: 115114 files (8,14 GB)
+1) 91 sec | 84 sec
+2) 84 sec | 83 sec
+

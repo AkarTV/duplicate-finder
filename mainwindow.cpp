@@ -33,19 +33,14 @@ void MainWindow::on_dir2_set_button_clicked()
     ui->dir2_path_label->setText(dir2_path);
 }
 
-#include "QDebug"
 void MainWindow::on_find_equal_button_clicked()
 {
     if(ui->dir1_path_label->text().isEmpty() || ui->dir2_path_label->text().isEmpty())
         QMessageBox::critical(this, "Doesn't choosed directory!", "Please set both directories");
     else
     {
-        unsigned start_time = clock();
         Comparison_binary binary_list(dir1, dir2);
         QStringList list_of_equals = binary_list.get_equals();
-        unsigned end_time = clock();
-        unsigned search_time = end_time - start_time;
-        qDebug()<<QString::number(search_time);
         if(list_of_equals.isEmpty())
             ui->result_label->setText("No equal files");
         else

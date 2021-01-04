@@ -1,7 +1,7 @@
 #include "comparison_binary.h"
 #include "QDirIterator"
 
-unsigned Comparison_binary::counter = 0;
+unsigned Comparison_binary::total_file_number = 0;
 Comparison_binary::Comparison_binary(const QDir& dir1, const QDir& dir2)
 {
     add_to_list(dir1);
@@ -22,71 +22,69 @@ void Comparison_binary::add_to_list(const QDir& directory)
 
 QStringList Comparison_binary::get_equals() const
 {
-    QStringList list_of_equals;
+    QStringList result_list;
     QMultiHash<QByteArray, QString> hash_list_of_files;
     for(auto key_ : list_of_files.uniqueKeys())
     {
-        int count = list_of_files.count(key_);
-        if(count > 1)
+        int count_of_files = list_of_files.count(key_);
+        if(count_of_files > 1)
         {
-            QStringList files_with_equal_size;
+            QStringList equal_files;
             QMultiHash<qint64, QString>::ConstIterator i = list_of_files.find(key_);
             for( ; i != list_of_files.constEnd() && i.key() == key_; ++i)
+                equal_files.append(i.value());
+            for(int i = 0; i < count_of_files-1; ++i)
             {
-                files_with_equal_size.append(i.value());
-            }
-            for(int i = 0; i < count-1; ++i)
-            {
-                QString temporary_list;
-                QFile file1(files_with_equal_size.at(i));
+                QString temporary_list_of_files;
+                QFile file1(equal_files.at(i));
                 file1.open(QIODevice::ReadOnly);
-                bool flag_for_first_file = false;
-                for(int j = i+1; j <count; ++j)
+                bool equal_to_first_file = false;
+                for(int j = i+1; j <count_of_files; ++j)
                 {
-                    bool flag_for_second_file = true;
-                    QFile file2(files_with_equal_size.at(j));
+                    bool second_file_is_equal = true;
+                    QFile file2(equal_files.at(j));
                     file2.open(QIODevice::ReadOnly);
                     while(!file1.atEnd() && !file2.atEnd())
                     {
-                            if(file1.readLine() != file2.readLine())
+                            if(file1.read(1000) != file2.read(1000))
                             {
-                                flag_for_second_file = false;
+                                second_file_is_equal = false;
                                 break;
                             }
                     }
-                    if(flag_for_second_file)
+                    if(second_file_is_equal)
                     {
-                        temporary_list.append(file2.fileName() + '\n');
-                        ++counter;
-                        files_with_equal_size.removeAt(j);
-                        --count;
+                        temporary_list_of_files.append(file2.fileName() + '\n');
+                        ++total_file_number;
+                        equal_files.removeAt(j);
+                        --count_of_files;
                         --j;
-                        flag_for_first_file = true;
+                        equal_to_first_file = true;
                     }
                     file2.close();
                     file1.reset();
                 }
-                if(flag_for_first_file)
+                if(equal_to_first_file)
                 {
-                    temporary_list.append(file1.fileName());
-                    ++counter;
-                    files_with_equal_size.removeAt(i);
-                    --count;
+                    temporary_list_of_files.append(file1.fileName());
+                    ++total_file_number;
+                    equal_files.removeAt(i);
+                    --count_of_files;
                     --i;
-                    list_of_equals.append(temporary_list);
+                    result_list.append(temporary_list_of_files);
                 }
             }
         }
     }
-    return list_of_equals;
+    return result_list;
 }
 
 unsigned Comparison_binary::get_total_counter() const
 {
-    return counter;
+    return total_file_number;
 }
 
 Comparison_binary::~Comparison_binary()
 {
-    counter = 0;
+    total_file_number = 0;
 }

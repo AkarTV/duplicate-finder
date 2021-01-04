@@ -13,7 +13,7 @@ public:
 private:
     QMultiHash<qint64, QString> list_of_files;
     void add_to_list(const QDir& directory);
-    static unsigned counter;
+    static unsigned total_file_number;
 };
 
 #endif // COMPARISON_BINARY_H
